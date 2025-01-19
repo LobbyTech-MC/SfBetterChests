@@ -52,10 +52,12 @@ public final class BetterChests extends JavaPlugin implements SlimefunAddon {
 
         getLogger().info("BetterChests has been enabled.");
 
+        /*
         if (getConfig().getBoolean("options.auto-update")) {
             BlobBuildUpdater updater = new BlobBuildUpdater(this, getFile(), "BetterChests");
             updater.start();
         }
+        */
     }
 
     @Override
