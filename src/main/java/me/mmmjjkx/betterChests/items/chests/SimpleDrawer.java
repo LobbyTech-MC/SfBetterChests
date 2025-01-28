@@ -52,18 +52,12 @@ public class SimpleDrawer extends SlimefunItem implements NotHopperable {
     private final NamespacedKey COUNT_ENTITY = new NamespacedKey(BetterChests.INSTANCE, "drawer_item_count_entity");
     private final NamespacedKey FACING = new NamespacedKey(BetterChests.INSTANCE, "drawer_facing");
 
-    private static final ItemStack EMPTY = new ItemStack(Material.BARRIER);
-
     private final Map<Location, EntityContainer> entities = new HashMap<>();
     /**
      *  Get the capacity of the drawer.
      */
     @Getter
     private final long capacity;
-
-    static {
-        EMPTY.editMeta(m -> m.displayName(Component.text("Empty")));
-    }
 
     public SimpleDrawer(SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, long capacity) {
         super(BCGroups.STORAGES, item, recipeType, recipe);
@@ -158,7 +152,7 @@ public class SimpleDrawer extends SlimefunItem implements NotHopperable {
 
                     if (count - toTake == 0) {
                         container.itemName.text(Component.text("Empty"));
-                        container.item.setItemStack(EMPTY);
+                        container.item.setItemStack(new ItemStack(Material.BARRIER));
                     }
 
                     pinv.addItem(beingGet);
@@ -262,10 +256,6 @@ public class SimpleDrawer extends SlimefunItem implements NotHopperable {
     }
 
     public static Component getItemName(ItemStack item) {
-        if (item == null) {
-            return Component.text("Empty");
-        }
-
         Component name = item.displayName();
         if (name instanceof TranslatableComponent tc) {
             return tc.args().get(0);
@@ -525,7 +515,6 @@ public class SimpleDrawer extends SlimefunItem implements NotHopperable {
 
     /**
      * Get the count of the item currently being stored in the drawer.
-     * Prefer using {@link #getStoringItemCountSafely(Location)} if you want to avoid flow exceptions.
      * (For hooks)
      *
      * @param barrelLoc the location of the drawer
@@ -560,18 +549,6 @@ public class SimpleDrawer extends SlimefunItem implements NotHopperable {
         }
 
         return Long.parseLong(text);
-    }
-
-    /**
-     * Get the count of the item currently being stored in the drawer.
-     * You can use this method safely without worrying about flow exceptions (long -> int).
-     * (For hooks)
-     *
-     * @param barrelLoc the location of the drawer
-     * @return the count of the item being stored, or 0 if there is no item.
-     */
-    public int getStoringItemCountSafely(Location barrelLoc) {
-        return (int) Math.min(getStoringItemCount(barrelLoc), Integer.MAX_VALUE - 1);
     }
 
     /**
